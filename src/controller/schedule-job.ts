@@ -6,6 +6,7 @@ import { logger } from '../logger';
 
 export async function createScheduleJob(req: Request, res: Response) {
   const when = String(req.body.when);
+  logger.info(`when is ${when}`);
 
   let time: Dayjs;
   if (when.toLocaleLowerCase().startsWith('after ')) {
@@ -30,25 +31,38 @@ export async function createScheduleJob(req: Request, res: Response) {
   await queue.add('schedule-jobs', req.body, {
     jobId,
     delay: delay * 1000, // second to ms
-    removeOnComplete: true
+    removeOnComplete: true,
+    removeOnFail: true
   });
   return res.status(200).json({ jobId, when: time });
 }
 
-export function deleteScheduleJobById(req: Request, res: Response) {
+export async function deleteScheduleJobById(req: Request, res: Response) {
   queue.removeJobs(`${req.params.id}`);
-  return res.status(200).json({});
+  const id = req.params.id;
+  const job = await queue.getJob(id);
+  if (!job) {
+    return res.status(404).json({ status: 404, message: 'job not found' });
+  }
+  await job.remove();
+  return res.status(200).json({ status: 200 });
 }
 export async function getScheduleJobs(_req: Request, res: Response) {
-  let jobs = await queue.getJobs(['delayed']);
-  const result = jobs.forEach((job) => {
-    return job.data;
+  const jobs = await queue.getJobs(['delayed']);
+  const result = jobs.map((job) => {
+    const data = job.data;
+    return { id: job.id, ...data };
   });
-  return res.status(200).json({ jobs: result });
+  return res.status(200).json({ status: 200, jobs: result });
 }
 
-export function getScheduleJobById(_req: Request, res: Response) {
-  return res.status(200).json({});
+export async function getScheduleJobById(req: Request, res: Response) {
+  const id = req.params.id;
+  const job = await queue.getJob(req.params.id);
+  if (!job) {
+    return res.status(404).json({ status: 404, message: 'job not found' });
+  }
+  return res.status(200).json({ id, ...job.data });
 }
 
 function getAbsoluteTimeFromRelative(relativeTime: string): Dayjs {
