@@ -1,0 +1,10 @@
+sv-main:
+   image: sv-main:1
+   restart: always
+   container_name: sv-main
+   ports:
+    - 3000:3000
+sv-worker:
+   image: sv-worker:1
+   restart: always
+   container_name: sv-worker
