@@ -19,5 +19,5 @@ COPY package.json ./
 COPY yarn.lock ./
 RUN yarn --prod --frozen-lockfile
 COPY --from=0 /app/dist/ /app/dist/
-
+COPY swagger.yml ./
 CMD [ "node", "dist/index.js" ]
