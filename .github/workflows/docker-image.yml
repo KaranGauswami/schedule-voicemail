@@ -31,3 +31,10 @@ jobs:
         context: ./
         file: ./docker-files/sv-main.Dockerfile
         tags: karangauswami/sv-main:${{ github.sha }}
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        context: ./
+        file: ./docker-files/sv-worker.Dockerfile
+        tags: karangauswami/sv-worker:${{ github.sha }}
