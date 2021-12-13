@@ -20,6 +20,5 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: ${{ secrets.DOCKER_USERNAME }}/sv-main
-        context: docker-files
-        file: sv-main.Dockerfile
+        file: "{context}/docker-files/sv-main.Dockerfile"
         tags: ${{ github.sha }}, latest
