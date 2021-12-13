@@ -23,5 +23,6 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        file: "{context}/docker-files/sv-main.Dockerfile"
+        context: ./docker-files
+        file: sv-main.Dockerfile
         tags: karangauswami/sv-main:${{ github.sha }}
