@@ -29,7 +29,7 @@ const apiLimiter = rateLimit({
 app.use('/api/', apiLimiter);
 app.use('/api/', routes);
 app.all('/*', (req, res) => {
-  logger.debug(req.body);
+  logger.debug({ body: req.body, headers: req.headers }, 'Unknown route');
   res
     .status(404)
     .json({ status: 404, message: `Router ${req.path} not found.` });
