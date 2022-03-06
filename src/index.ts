@@ -12,6 +12,7 @@ const port = process.env['NODE_APP_PORT'] || 3000;
 
 app.use(morgan('combined'));
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 const swaggerDocument = YAML.load(path.resolve(__dirname, '..', 'swagger.yml'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
