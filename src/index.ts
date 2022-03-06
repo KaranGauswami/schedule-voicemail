@@ -10,7 +10,7 @@ import rateLimit from 'express-rate-limit';
 const app = express();
 const port = process.env['NODE_APP_PORT'] || 3000;
 
-app.use(morgan('tiny'));
+app.use(morgan('combined'));
 app.use(express.urlencoded({ extended: false }));
 const swaggerDocument = YAML.load(path.resolve(__dirname, '..', 'swagger.yml'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -21,7 +21,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const apiLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 60 minutes
-  max: 5,
+  max: 100,
   message:
     'Too many requests created from this IP, please try again after sometime'
 });

@@ -22,18 +22,23 @@ export async function createScheduleJob(req: Request, res: Response) {
   const jobId = uuidv4();
   const currentTime = dayjs();
   const delay = time.diff(currentTime, 'seconds', false);
-  if (delay < 60) {
-    return res
-      .status(400)
-      .json({ status: 400, message: 'when should be at least after 1 min' });
+  if (delay < 1) {
+    return res.status(400).json({
+      status: 400,
+      message: 'when should be at least after 1 second'
+    });
   }
   logger.info(`${jobId} will be processed after ${delay} seconds`);
-  await queue.add('schedule-jobs', req.body, {
-    jobId,
-    delay: delay * 1000, // second to ms
-    removeOnComplete: true,
-    removeOnFail: true
-  });
+  await queue.add(
+    'schedule-jobs',
+    { data: req.body },
+    {
+      jobId,
+      delay: delay * 1000, // second to ms
+      removeOnComplete: true,
+      removeOnFail: true
+    }
+  );
   return res.status(200).json({ jobId, when: time });
 }
 
