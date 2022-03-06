@@ -45,7 +45,7 @@ app.post('/sns', express.text(), (req, res) => {
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || ''
     }
   });
-  message.forEach(async (message) => {
+  message.forEach(async (message: any) => {
     console.log(message);
     const bucketName = message['s3']['bucket']['name'];
     const key = decodeURIComponent(message['s3']['object']['key']);
@@ -54,7 +54,8 @@ app.post('/sns', express.text(), (req, res) => {
     const output = await client.send(command);
     const filePath = path.resolve(key);
     const ws = fs.createWriteStream(filePath);
-    output.Body.pipe(ws);
+    //@ts-ignore
+    output.Body?.pipe(ws);
     // const url = await getSignedUrl(client, command, { expiresIn: 3600 });
     // console.log(url);
   });
