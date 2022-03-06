@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { queue } from '../services/bull';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs, { Dayjs } from 'dayjs';
-import { logger } from '../logger';
+import logger from '../logger';
 
 export async function createScheduleJob(req: Request, res: Response) {
   const when = String(req.body.when);

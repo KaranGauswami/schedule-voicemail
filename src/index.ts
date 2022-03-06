@@ -1,6 +1,6 @@
 import express from 'express';
 import morgan from 'morgan';
-import { logger } from './logger';
+import logger from './logger';
 import routes from './routes';
 import swaggerUi from 'swagger-ui-express';
 import path from 'path';
