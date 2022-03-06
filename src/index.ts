@@ -1,11 +1,15 @@
 import express from 'express';
 import morgan from 'morgan';
+import fs from 'fs';
 import logger from './logger';
 import routes from './routes';
 import swaggerUi from 'swagger-ui-express';
 import path from 'path';
 import YAML from 'yamljs';
 import rateLimit from 'express-rate-limit';
+import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 const port = process.env['NODE_APP_PORT'] || 3000;
@@ -31,6 +35,29 @@ app.use('/api/', apiLimiter);
 app.use('/api/', routes);
 app.post('/sns', express.text(), (req, res) => {
   logger.debug({ body: req.body }, `SNS Body`);
+  const data = JSON.parse(req.body);
+  let message = JSON.parse(data.Message);
+  message = message.Records;
+  const client = new S3Client({
+    region: 'ap-south-1',
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || ''
+    }
+  });
+  message.forEach(async (message) => {
+    console.log(message);
+    const bucketName = message['s3']['bucket']['name'];
+    const key = decodeURIComponent(message['s3']['object']['key']);
+    console.log(bucketName, key);
+    const command = new GetObjectCommand({ Bucket: bucketName, Key: key });
+    const output = await client.send(command);
+    const filePath = path.resolve(key);
+    const ws = fs.createWriteStream(filePath);
+    output.Body.pipe(ws);
+    // const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+    // console.log(url);
+  });
   res.status(200).json({});
 });
 app.all('/*', (req, res) => {
