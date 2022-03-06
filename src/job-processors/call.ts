@@ -1,8 +1,8 @@
 import { queue } from '../services/bull';
-import { PollyClient, SynthesizeSpeechCommand } from '@aws-sdk/client-polly';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-import { randomUUID } from 'crypto';
-import fs from 'fs';
+import {
+  PollyClient,
+  StartSpeechSynthesisTaskCommand
+} from '@aws-sdk/client-polly';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -26,41 +26,15 @@ async function generateTextToSpeech(number: string, text: string) {
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || ''
       }
     });
-    const command = new SynthesizeSpeechCommand({
+    const command = new StartSpeechSynthesisTaskCommand({
       Text: text,
       OutputFormat: 'mp3',
       SampleRate: '8000',
-      VoiceId: 'Matthew'
+      VoiceId: 'Matthew',
+      OutputS3KeyPrefix: number,
+      OutputS3BucketName: process.env.AWS_BUCKET_NAME
     });
-    const output = await client.send(command);
-    const s3client = new S3Client({
-      region: 'ap-south-1',
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || ''
-      }
-    });
-    const fileName = `${randomUUID()}.mp3`;
-    const writes = fs.createWriteStream(fileName, { encoding: 'binary' });
-    // // console.log(output.AudioStream);
-    if (!output.AudioStream) {
-      throw new Error('audio stream is null');
-    }
-    for await (const data of output.AudioStream) {
-      writes.write(data);
-    }
-    // output.AudioStream?.pipe(writes);
-
-    const putCommand = new PutObjectCommand({
-      Bucket: process.env.AWS_BUCKET_NAME || '',
-      Body: fs.createReadStream(fileName),
-      Key: `${randomUUID()}.mp3`,
-      Metadata: {
-        number: number
-      }
-    });
-    await s3client.send(putCommand);
-    fs.unlinkSync(fileName);
+    await client.send(command);
   } catch (e) {
     if (e instanceof Error) {
       console.error(e.message);
