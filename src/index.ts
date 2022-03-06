@@ -53,6 +53,10 @@ app.post('/sns', express.text(), (req, res) => {
     console.log(bucketName, key);
     const command = new GetObjectCommand({ Bucket: bucketName, Key: key });
     const output = await client.send(command);
+    const [prefixPath] = key.split('/');
+    fs.mkdirSync(path.resolve('tts_files_voicemail', prefixPath), {
+      recursive: true
+    });
     const filePath = path.resolve('tts_files_voicemail', key);
     const ws = fs.createWriteStream(filePath);
     //@ts-ignore
