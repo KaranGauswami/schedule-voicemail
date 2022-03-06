@@ -29,6 +29,10 @@ const apiLimiter = rateLimit({
 
 app.use('/api/', apiLimiter);
 app.use('/api/', routes);
+app.post('/sns', express.text(), (req, res) => {
+  logger.debug({ body: req.body }, `SNS Body`);
+  res.status(200).json({});
+});
 app.all('/*', (req, res) => {
   logger.debug({ body: req.body, headers: req.headers }, 'Unknown route');
   res
