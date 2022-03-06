@@ -9,6 +9,7 @@ import YAML from 'yamljs';
 import rateLimit from 'express-rate-limit';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import dotenv from 'dotenv';
+import { Connection } from 'modesl';
 dotenv.config();
 
 const app = express();
@@ -56,6 +57,22 @@ app.post('/sns', express.text(), (req, res) => {
     const ws = fs.createWriteStream(filePath);
     //@ts-ignore
     output.Body?.pipe(ws);
+    const phoneNumber = key.split('/')[0];
+    logger.debug(`Phone number is ${phoneNumber}`);
+    const eslCommand = `originate {origination_caller_id_number=+11234512345,ignore_early_media=true}sofia/gateway/Plivo-outbound/${phoneNumber} &transfer(114092 public XML)`;
+    const connection = new Connection(
+      {
+        host: 'host.docker.internal',
+        port: 8021
+      },
+      'ClueCon',
+      function () {
+        // @ts-ignore
+        connection.api(eslCommand, (res: any) => {
+          console.log(res.getBody());
+        });
+      }
+    );
     // const url = await getSignedUrl(client, command, { expiresIn: 3600 });
     // console.log(url);
   });

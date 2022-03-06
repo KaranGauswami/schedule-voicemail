@@ -31,7 +31,8 @@ async function generateTextToSpeech(number: string, text: string) {
       OutputFormat: 'mp3',
       SampleRate: '8000',
       VoiceId: 'Matthew',
-      OutputS3KeyPrefix: number,
+
+      OutputS3KeyPrefix: `${number}/`,
       OutputS3BucketName: process.env.AWS_BUCKET_NAME
     });
     await client.send(command);
