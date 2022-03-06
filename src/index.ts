@@ -88,7 +88,7 @@ app.listen(port, () => {
 });
 function eslConnect() {
   return new Promise((resolve, reject) => {
-    const connection = new esl.Connection('172.17.0.1', 8021, 'Cluecon')
+    const connection = new esl.Connection('172.17.0.1', 8021, 'ClueCon')
       .on('esl::ready', () => {
         console.log('Connection is ready ');
         resolve(connection);
