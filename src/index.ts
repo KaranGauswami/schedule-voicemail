@@ -64,17 +64,11 @@ app.post('/sns', express.text(), (req, res) => {
     const phoneNumber = key.split('/')[0];
     logger.debug(`Phone number is ${phoneNumber}`);
     const eslCommand = `originate {origination_caller_id_number=+11234512345,ignore_early_media=true}[tts_file_path=/home/admin/tts_files_voicemail/${key}]user/1002 &transfer(114092 public XML)`;
-    const connection = new esl.Connection(
-      'host.docker.internal',
-      8021,
-      'Cluecon',
-      () => {
-        // @ts-ignore
-        connection.api(eslCommand, (res: any) => {
-          console.log(res.getBody());
-        });
-      }
-    );
+    const connection = await eslConnect();
+    // @ts-ignore
+    connection.api(eslCommand, (res: any) => {
+      console.log(res.getBody());
+    });
     // const url = await getSignedUrl(client, command, { expiresIn: 3600 });
     // console.log(url);
   });
@@ -89,3 +83,18 @@ app.all('/*', (req, res) => {
 app.listen(port, () => {
   logger.info(`Listening on port ${port}`);
 });
+function eslConnect() {
+  return new Promise((resolve, reject) => {
+    const connection = new esl.Connection(
+      'host.docker.internal',
+      8021,
+      'Cluecon'
+    )
+      .on('esl::ready', () => {
+        resolve(connection);
+      })
+      .on('error', (error) => {
+        reject(error);
+      });
+  });
+}
