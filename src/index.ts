@@ -28,6 +28,12 @@ const apiLimiter = rateLimit({
 
 app.use('/api/', apiLimiter);
 app.use('/api/', routes);
+app.all('/*', (req, res) => {
+  logger.debug(req.body);
+  res
+    .status(404)
+    .json({ status: 404, message: `Router ${req.path} not found.` });
+});
 app.listen(port, () => {
   logger.info(`Listening on port ${port}`);
 });
