@@ -1,4 +1,4 @@
-import { queue } from '../services/bull';
+import { Job, Worker } from 'bullmq';
 import {
   PollyClient,
   StartSpeechSynthesisTaskCommand
@@ -6,17 +6,21 @@ import {
 import dotenv from 'dotenv';
 dotenv.config();
 
-queue.process('schedule-jobs', async function (job, done) {
-  const data = job.data.data;
-  console.log(data);
-  if (!data.message) {
-    console.log('no message was found');
-    done();
-  }
-  await generateTextToSpeech(data.number, data.message);
-  done();
-});
-
+const worker = new Worker(
+  'call',
+  async (job: Job) => {
+    console.log('got job');
+    const data = job.data.data;
+    console.log(data);
+    if (!data.message) {
+      console.log('no message was found');
+      return;
+    }
+    await generateTextToSpeech(data.number, data.message);
+  },
+  { connection: { host: 'localhost' }, autorun: false }
+);
+worker.run();
 async function generateTextToSpeech(number: string, text: string) {
   try {
     const client = new PollyClient({

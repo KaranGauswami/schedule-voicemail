@@ -1,46 +1,45 @@
 {
-    "compilerOptions": {
-      "module": "commonjs",
-      "esModuleInterop": true,
-      "resolveJsonModule": true,
-      "target": "ES2015",
-  
-      /* Strict Type-Checking Options */
-      "strict": true /* Enable all strict type-checking options. */,
-      "noImplicitAny": true /* Raise error on expressions and declarations with an implied 'any' type. */,
-      "strictNullChecks": true /* Enable strict null checks. */,
-      "strictFunctionTypes": true /* Enable strict checking of function types. */,
-      "strictBindCallApply": true /* Enable strict 'bind', 'call', and 'apply' methods on functions. */,
-      "strictPropertyInitialization": false /* Enable strict checking of property initialization in classes. */,
-      "noImplicitThis": true /* Raise error on 'this' expressions with an implied 'any' type. */,
-      "alwaysStrict": true,
-  
-      "noUnusedLocals": true /* Report errors on unused locals. */,
-      "noUnusedParameters": true /* Report errors on unused parameters. */,
-  
-      "noImplicitReturns": true /* Report error when not all code paths in function return a value. */,
-      "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
-      "noImplicitOverride": true /* Ensure overriding members in derived classes are marked with an 'override' modifier. */,
-      // "noUncheckedIndexedAccess": true /* Include 'undefined' in index signature results */,
-      "noPropertyAccessFromIndexSignature": false /* Require undeclared properties from index signatures to use element accesses. */,
-  
-      "allowUnreachableCode": false,
-      "allowUnusedLabels": false,
-      "newLine": "lf",
-  
-      "moduleResolution": "node",
-      "sourceMap": true,
-      "outDir": "dist",
-      "baseUrl": ".",
-      "paths": {
-        "*": ["node_modules/*", "src/types/*"]
-      },
-      "emitDecoratorMetadata": true,
-      "experimentalDecorators": true
+  "compilerOptions": {
+    "module": "ES2022",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "target": "ES2022",
+
+    /* Strict Type-Checking Options */
+    "strict": true /* Enable all strict type-checking options. */,
+    "noImplicitAny": true /* Raise error on expressions and declarations with an implied 'any' type. */,
+    "strictNullChecks": true /* Enable strict null checks. */,
+    "strictFunctionTypes": true /* Enable strict checking of function types. */,
+    "strictBindCallApply": true /* Enable strict 'bind', 'call', and 'apply' methods on functions. */,
+    "strictPropertyInitialization": false /* Enable strict checking of property initialization in classes. */,
+    "noImplicitThis": true /* Raise error on 'this' expressions with an implied 'any' type. */,
+    "alwaysStrict": true,
+
+    "noUnusedLocals": true /* Report errors on unused locals. */,
+    "noUnusedParameters": true /* Report errors on unused parameters. */,
+
+    "noImplicitReturns": true /* Report error when not all code paths in function return a value. */,
+    "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
+    "noImplicitOverride": true /* Ensure overriding members in derived classes are marked with an 'override' modifier. */,
+    // "noUncheckedIndexedAccess": true /* Include 'undefined' in index signature results */,
+    "noPropertyAccessFromIndexSignature": false /* Require undeclared properties from index signatures to use element accesses. */,
+
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "newLine": "lf",
+
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*", "src/types/*"]
     },
-    "lib": ["es2015"],
-  
-    "skipLibCheck": true /* Skip type checking of declaration files. */,
-    "forceConsistentCasingInFileNames": true
-  }
-  
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
+  },
+  "lib": ["es2015"],
+
+  "skipLibCheck": true /* Skip type checking of declaration files. */,
+  "forceConsistentCasingInFileNames": true
+}

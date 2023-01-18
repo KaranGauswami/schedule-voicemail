@@ -1,8 +1,8 @@
 import express from 'express';
 import morgan from 'morgan';
 import fs from 'fs';
-import logger from './logger';
-import routes from './routes';
+import logger from './logger/index.js';
+import routes from './routes.js';
 import swaggerUi from 'swagger-ui-express';
 import path from 'path';
 import YAML from 'yamljs';
@@ -18,7 +18,9 @@ const port = process.env['NODE_APP_PORT'] || 3000;
 app.use(morgan('combined'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-const swaggerDocument = YAML.load(path.resolve(__dirname, '..', 'swagger.yml'));
+const swaggerDocument = YAML.load(
+  path.resolve('schedule-voicemail', '..', 'swagger.yml')
+);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB or API Gateway, Nginx, etc)

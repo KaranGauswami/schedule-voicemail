@@ -1,5 +1,17 @@
-import Bull from 'bull';
+import { Queue } from 'bullmq';
+import { Worker, Job } from 'bullmq';
+const queueName = 'schedule-jobs';
 
-const queue = new Bull('call-queue', { redis: { host: 'fs.karanss.com' } });
+new Worker(
+  queueName,
+  async (job: Job) => {
+    console.log('got job', job.data);
+  },
+  { connection: { host: 'localhost' } }
+);
 
+const queue = new Queue(queueName, { connection: { host: 'localhost' } });
+
+await queue.add('call', { data: '' });
+console.log('data was sent');
 export { queue };
